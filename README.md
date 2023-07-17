@@ -1,4 +1,4 @@
-# Consensys Mobile Engineer Challenge
+# Kado Mobile Engineer Challenge
 
 This challenge consists of create a creating a React Native mobile app from scratch, and offer seamsly swaps between blockchains uing SquidRouter.
 
