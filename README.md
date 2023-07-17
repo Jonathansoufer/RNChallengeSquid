@@ -1,79 +1,64 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Consensys Mobile Engineer Challenge
 
-# Getting Started
+This challenge consists of create a creating a React Native mobile app from scratch, and offer seamsly swaps between blockchains uing SquidRouter.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+### The Modules
 
-## Step 1: Start the Metro Server
+- Storing all global states in a Zustand store
+- Storing persistent data in a performant way (mmkv)
+- Using a navigation library (React Navigation)
+- Adding a splash screen & app icon
+- Adding onboarding screens with animations
+- Adding translations (i18n)
+- Adding a theme provider (styled-components)
+- Adding a global performance monitoring tool (react-native-performance)
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
-
-To start Metro, run the following command from the _root_ of your React Native project:
+## Simple React Native App Structure
 
 ```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
+    |- app/                    # Main entry point of the app's code
+      |- analytics             # Analytics hooks to be used in the app
+      |- navigation            # Navigation files
+      |- components            # Components
+         |- index.ts           # Central export file for all components
+         |- atoms              # Atoms: Smallest components
+         |- molecules          # Molecules: Components composed of atoms
+         |- organisms          # Organisms: Components composed of molecules
+      |- screens/              # Screens
+         |- index.ts           # Central export file for all screens
+         |- screen-name/       # Screen name defining usually a module/concern of the app
+            |- index.ts        # Main wrapper of the screen
+            |- utils/          # Local utils for the screen
+      |- globalState/          # Zustand State (Global State Management)
+      |- services/             # External services (API, Storage, etc)
+      |- utils/                # Global utils (Helpers, etc)
+      |- types/                # Global Types
 ```
 
-## Step 2: Start your Application
+> Note: This structure was built to best fit challenge's requirement. The structure could be different if it was a real app.
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+## Build and Run the app (Optional)
 
-### For Android
+If you would like to build the app to be able to test it, just run:
 
 ```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
+yarn
 ```
 
-### For iOS
+### iOS
 
 ```bash
-# using npm
-npm run ios
-
-# OR using Yarn
 yarn ios
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+### Android
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+```bash
+yarn android
+```
 
-## Step 3: Modifying your App
+Note: Make sure you are using node version ˆ18.0.0 and follow the instructions on the [React Native Docs](https://reactnative.dev/docs/environment-setup) to setup your environment.
 
-Now that you have successfully run the app, let's modify it.
+<!-- ## Demo
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+![Demo](./app/assets/demo/demo.mov) -->
