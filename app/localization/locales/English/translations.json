@@ -1,0 +1,21 @@
+{
+  "globals": {
+    "btn": {
+      "next": "Next",
+      "back": "Back"
+    }
+  },
+  "send": {
+    "btn": {
+      "view-account": "View Account",
+      "connect-wallet": "Connect"
+    }
+  },
+  "swap": {
+    "from": "From",
+    "to": "To",
+    "btn": {
+      "swap": "Swap"
+    }
+  }
+}

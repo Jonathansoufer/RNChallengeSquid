@@ -6,11 +6,12 @@ import { INTRO_SCREEN_04 } from '../../utils/constantsText';
 import { useTheme } from '@react-navigation/native';
 import { PrimaryBtn, ScreenIndicators, Artwork4 } from '../../components';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { useTranslation } from 'react-i18next';
 
 export const Scene04 = ({ navigation }: RootStackScreenProps<'Scene04'>) => {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-
+  const { t } = useTranslation();
   return (
     // eslint-disable-next-line react-native/no-inline-styles
     <View
@@ -46,10 +47,13 @@ export const Scene04 = ({ navigation }: RootStackScreenProps<'Scene04'>) => {
           entering={FadeInDown.delay(400).duration(1000).springify()}
           style={styles.animatedView}>
           <PrimaryBtn
-            label="Back"
+            label={t('globals.btn.back')}
             onPress={() => navigation.replace('Scene03')}
           />
-          <PrimaryBtn label="Next" onPress={() => navigation.replace('Home')} />
+          <PrimaryBtn
+            label={t('globals.btn.next')}
+            onPress={() => navigation.replace('Home')}
+          />
         </Animated.View>
       </View>
     </View>

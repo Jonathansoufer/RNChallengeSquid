@@ -1,7 +1,9 @@
+// eslint-disable react-native/no-inline-styles
 import { View, StyleSheet } from 'react-native';
 import Toast from 'react-native-toast-message';
 import React from 'react';
 import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { PrimaryBtn, Wallet } from '../../components';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { FlashList } from '@shopify/flash-list';
@@ -15,7 +17,7 @@ import {
   providerMetadata,
 } from '@/services/sdks/wallet-connect/config';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Spacing, log } from '@/utils';
+import { Spacing } from '@/utils';
 import { useWalletConnectHooks } from '@/globalState/wallet-connect';
 import { TokenRow } from '@/components/atoms/TokenRow';
 import { CoinData } from '@/screens/Home/mocked.data';
@@ -27,6 +29,7 @@ import { FloatingGroup } from '@/components/molecules/FloatingGroup';
 export function Home({ navigation }: RootStackScreenProps<'Home'>) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   const { open, provider, address, isConnected } = useWalletConnectModal();
   const { saveWalletConnectionSession } = useWalletConnectHooks();
@@ -44,13 +47,13 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>) {
   const onRowDisabledPress = () => {
     Toast.show({
       type: 'info',
-      text1: 'Warning',
-      text2: 'Please connect your wallet first',
+      text1: t('send.toasts.title'),
+      text2: t('send.toasts.info.description'),
     });
   };
 
   const handleWalletBtnPress = () => {
-    if (isConnected) {
+    if (!isConnected) {
       navigation.navigate('Swap');
     } else {
       open();
@@ -58,7 +61,6 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>) {
   };
 
   return (
-    // eslint-disable-next-line react-native/no-inline-styles
     <View
       style={{
         backgroundColor: theme.colors.card,
@@ -91,7 +93,11 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>) {
         <Animated.View
           entering={FadeInDown.delay(400).duration(1000).springify()}>
           <PrimaryBtn
-            label={isConnected ? 'View Account' : 'Connect'}
+            label={
+              isConnected
+                ? t('send.btn.view-account')
+                : t('send.btn.connect-wallet')
+            }
             style={styles.primaryBtn}
             onPress={handleWalletBtnPress}
           />

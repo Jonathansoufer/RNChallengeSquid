@@ -1,0 +1,21 @@
+{
+  "globals": {
+    "btn": {
+      "next": "Próximo",
+      "back": "Voltar"
+    }
+  },
+  "send": {
+    "btn": {
+      "view-account": "Ver conta",
+      "connect-wallet": "Conectar"
+    }
+  },
+  "swap": {
+    "from": "De",
+    "to": "Para",
+    "btn": {
+      "swap": "Trocar"
+    }
+  }
+}
