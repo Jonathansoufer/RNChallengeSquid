@@ -50,7 +50,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>) {
   };
 
   const handleWalletBtnPress = () => {
-    if (!isConnected) {
+    if (isConnected) {
       navigation.navigate('Swap');
     } else {
       open();

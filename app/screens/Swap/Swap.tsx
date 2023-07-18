@@ -1,21 +1,23 @@
-import { View, StyleSheet, TextInput } from 'react-native';
-import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
 import { RootStackScreenProps } from '../../navigation/RootNavigation';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 import { PrimaryBtn, Send as SwapArt } from '../../components';
 import Animated, { FadeInUp, FadeInDown } from 'react-native-reanimated';
-import { useSquidHooks } from '@/globalState/squid';
+import { Dropdown } from '@/components/atoms/DropDown';
+import { useFormattedTokens, useFormattedChains } from '@/services/sdks/squid';
+import { Item } from 'react-native-picker-select';
 
 export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
   const theme = useTheme();
-  const { setChains, chains } = useSquidHooks();
+  const [chainId, setChainId] = React.useState('1');
+  const formattedChains = useFormattedChains();
+  const formattedToken = useFormattedTokens(chainId);
 
-  React.useEffect(() => {
-    (async () => {
-      await setChains();
-    })();
-  }, []);
+  const handleChainChange = (value: string) => {
+    setChainId(value);
+  };
 
   return (
     // eslint-disable-next-line react-native/no-inline-styles
@@ -26,25 +28,25 @@ export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
         <SwapArt width={150} height={150} />
       </Animated.View>
       <View style={styles.innerContainer}>
-        <Animated.View
+        <Dropdown
+          list={formattedChains}
+          onChange={handleChainChange}
+          style={styles.dropDownList}
+        />
+        <Dropdown
+          list={formattedToken}
+          onChange={() => {}}
+          style={styles.dropDownList}
+        />
+
+        {/* <Animated.View
           entering={FadeInDown.delay(200).duration(1000).springify()}
-          style={styles.inputContainer}>
-          <TextInput
-            placeholder="To: "
-            style={[
-              styles.toStyle,
-              {
-                color: theme.colors.text,
-                backgroundColor: theme.colors.background,
-              },
-            ]}
-          />
-        </Animated.View>
+          style={styles.inputContainer}></Animated.View> */}
 
         <Animated.View
           entering={FadeInDown.delay(600).duration(1000).springify()}>
           <PrimaryBtn
-            label="Send"
+            label="Swap"
             onPress={() => navigation.navigate('Home')}
           />
         </Animated.View>
@@ -54,6 +56,9 @@ export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
 };
 
 const styles = StyleSheet.create({
+  dropDownList: {
+    fontSize: 24,
+  },
   animatedDescription: {
     opacity: 0.5,
     marginTop: 16,
