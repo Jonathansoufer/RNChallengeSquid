@@ -7,6 +7,7 @@ import {
 import { ChainData, TokenData } from '@0xsquid/sdk/dist/types';
 import { initializeSquid } from '@/services/sdks/squid';
 import { zustandMMKVStorage } from '../app-persist-storage';
+import { log } from '@/utils';
 
 export interface SquidState {
   tokens: TokenData[] | [];
@@ -36,6 +37,7 @@ export const useSquid = create(
       ...initialSquidState,
       setTokens: async () => {
         const { tokens } = await initializeSquid();
+        log('tokens', tokens);
         set({
           tokens,
         });
