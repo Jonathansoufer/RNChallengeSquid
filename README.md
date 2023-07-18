@@ -62,3 +62,9 @@ Note: Make sure you are using node version ˆ18.0.0 and follow the instructions 
 <!-- ## Demo
 
 ![Demo](./app/assets/demo/demo.mov) -->
+
+## Screenshots
+
+![Onboarding Screen](./app/assets/screenshots/onboarding-screen.png)
+![Home Screen](./app/assets/screenshots/home-screen.png)
+![Wallet Connect](./app/assets/screenshots/wallet-connect-screen.png)
