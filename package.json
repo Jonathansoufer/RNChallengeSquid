@@ -30,6 +30,7 @@
     "@walletconnect/sign-client": "^2.9.0",
     "@walletconnect/types": "^2.9.0",
     "@walletconnect/utils": "^2.9.0",
+    "@walletconnect/web3-provider": "^1.8.0",
     "@walletconnect/web3wallet": "^1.8.6",
     "auto-zustand-selectors-hook": "^2.0.0",
     "axios": "^1.4.0",
@@ -78,6 +79,7 @@
     "styled-components": "^6.0.4",
     "styled-system": "^5.1.5",
     "ts-is-present": "^1.2.2",
+    "web3modal": "^1.9.12",
     "zustand": "^4.3.9"
   },
   "reactNativePermissionsIOS": [

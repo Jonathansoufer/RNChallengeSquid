@@ -21,6 +21,7 @@
   "swap": {
     "from": "From",
     "to": "To",
+    "destinationWallet": "Destination Wallet",
     "btn": {
       "swap": "Swap"
     },

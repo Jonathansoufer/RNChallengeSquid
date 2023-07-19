@@ -6,7 +6,8 @@ import {
   Swap as SwapArt,
 } from '@/components';
 import { useFormattedChains, useFormattedTokens } from '@/services/sdks/squid';
-import { Colors, Spacing, log } from '@/utils';
+import { Colors, Spacing } from '@/utils';
+import { useWalletProvider } from '@/utils/hooks/use-wallet-provider';
 import { useTheme } from '@react-navigation/native';
 import { Box, HStack, Input, View } from 'native-base';
 import React from 'react';
@@ -22,11 +23,13 @@ interface IChain {
   chainId: string;
   tokenAddress: string;
   tokens: Array<Item>;
+  walletAddress?: string;
 }
 
 export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const { connect } = useWalletProvider();
   const { t } = useTranslation();
   const { getEstimation, executeSwap } = useRoute();
   const [from, setFrom] = React.useState<IChain>({
@@ -38,20 +41,20 @@ export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
     chainId: '1',
     tokenAddress: '',
     tokens: [],
+    walletAddress: '',
   });
 
   const formattedChains = useFormattedChains();
   const { filterTokens, formattedTokens } = useFormattedTokens();
 
-  const handleSwapBtnPress = () => {
-    log('handleSwapBtnPress pressed');
-    getEstimation({
-      fromChain: 'Ethereum',
+  const handleSwapBtnPress = async () => {
+    await getEstimation({
+      fromChain: Number(from.chainId),
       fromToken: from.tokenAddress,
       fromAmount: '100',
-      toChain: 'Avalanche-c',
+      toChain: Number(to.chainId),
       toToken: to.tokenAddress,
-      toAddress: '0x000',
+      toAddress: to.walletAddress!,
       slippage: 1,
       enableForecall: false,
       quoteOnly: true,
@@ -146,6 +149,9 @@ export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
             }
           />
         </HStack>
+        <Box alignItems="center" style={{ margin: 10 }}>
+          <Input mx="3" placeholder={t('swap.destinationWallet')} w="100%" />
+        </Box>
       </View>
       <FloatingGroup>
         <Animated.View

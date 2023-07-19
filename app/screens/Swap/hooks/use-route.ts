@@ -23,9 +23,11 @@ interface ExecutionSettings {
 export function useRoute() {
   const getEstimation = async (params: TradeParams) => {
     const { squid } = await initializeSquid();
+    log('getEstimation params', params);
+
     const { route, requestId, integratorId } = await squid.getRoute(params);
 
-    log('getEstimation', requestId, integratorId);
+    log('getEstimation', route, requestId, integratorId);
 
     return { estimation: route.estimate };
   };
