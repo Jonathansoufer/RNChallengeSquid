@@ -1,7 +1,7 @@
 import * as React from 'react';
-import Svg, { SvgProps, Path, Circle, Rect } from 'react-native-svg';
+import Svg, { Circle, Path, Rect, SvgProps } from 'react-native-svg';
 
-export const Send = (props: SvgProps) => (
+export const Swap = (props: SvgProps) => (
   <Svg
     data-name="Layer 1"
     width={24}

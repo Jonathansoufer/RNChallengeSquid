@@ -1,13 +1,12 @@
-import { StateCreator, create } from 'zustand';
-import { persist, PersistOptions } from 'zustand/middleware';
+import { initializeSquid } from '@/services/sdks/squid';
+import { ChainData, TokenData } from '@0xsquid/sdk/dist/types';
 import {
   createSelectorFunctions,
   createSelectorHooks,
 } from 'auto-zustand-selectors-hook';
-import { ChainData, TokenData } from '@0xsquid/sdk/dist/types';
-import { initializeSquid } from '@/services/sdks/squid';
+import { StateCreator, create } from 'zustand';
+import { PersistOptions, persist } from 'zustand/middleware';
 import { zustandMMKVStorage } from '../app-persist-storage';
-import { log } from '@/utils';
 
 export interface SquidState {
   tokens: TokenData[] | [];
@@ -37,7 +36,6 @@ export const useSquid = create(
       ...initialSquidState,
       setTokens: async () => {
         const { tokens } = await initializeSquid();
-        log('tokens', tokens);
         set({
           tokens,
         });

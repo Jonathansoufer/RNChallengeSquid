@@ -1,35 +1,41 @@
-import { TokenData } from '@0xsquid/sdk';
-import { useState, useEffect, useCallback } from 'react';
 import { useSquidHooks } from '@/globalState/squid';
-import { Item } from 'react-native-picker-select';
 import { capitalize } from '@/utils/methods';
-import { log } from '@/utils';
+import { TokenData } from '@0xsquid/sdk';
+import { useCallback, useState } from 'react';
+import { Item } from 'react-native-picker-select';
 
-export const useFormattedTokens = (chainId: string) => {
+export const useFormattedTokens = () => {
   const { setTokens, tokens } = useSquidHooks();
-  const [formattedToken, setFormattedToken] = useState<Item[]>([]);
-  log('chainId', chainId);
+  const [formattedTokens, setFormattedTokens] = useState<Item[]>([]);
 
-  useEffect(() => {
-    (async () => {
-      await setTokens();
-      tokens.filter(token => token.chainId !== chainId);
-      const formatTokenData = (token: TokenData) => {
-        return {
-          label: capitalize(token.name),
-          value: token.address,
-        };
-      };
+  const parseTokenData = (token: TokenData) => {
+    return {
+      label: capitalize(token.name),
+      value: token.address,
+    };
+  };
 
-      const formatToken = (tokens: TokenData[]) => {
-        return tokens.map(token => formatTokenData(token));
-      };
+  const parseTokens = (tokens: TokenData[]) => {
+    return tokens
+      .filter((element, index) => {
+        return tokens.indexOf(element) === index;
+      })
+      .map(token => parseTokenData(token));
+  };
 
-      const fToken = formatToken(tokens);
+  const filterTokens = useCallback((chainId: string) => {
+    setTokens();
 
-      setFormattedToken(fToken);
-    })();
+    const tokensFilteredByChainId = tokens.filter(
+      token => token.chainId === chainId,
+    );
+
+    const ft = parseTokens(tokensFilteredByChainId);
+
+    setFormattedTokens(ft);
+
+    return ft;
   }, []);
 
-  return formattedToken;
+  return { filterTokens, formattedTokens };
 };

@@ -1,35 +1,85 @@
 // eslint-disable react-native/no-inline-styles
-import { View, StyleSheet, Text } from 'react-native';
+import {
+  CustomSelect,
+  FloatingGroup,
+  PrimaryBtn,
+  Swap as SwapArt,
+} from '@/components';
+import { useFormattedChains, useFormattedTokens } from '@/services/sdks/squid';
+import { Colors, Spacing, log } from '@/utils';
+import { useTheme } from '@react-navigation/native';
+import { Box, HStack, Input, View } from 'native-base';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { StyleSheet } from 'react-native';
+import { Item } from 'react-native-picker-select';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RootStackScreenProps } from '../../navigation/RootNavigation';
-import { Spacing } from '@/utils';
-import { useTheme } from '@react-navigation/native';
-import { useTranslation } from 'react-i18next';
-import { PrimaryBtn, Send as SwapArt } from '../../components';
-import Animated, { FadeInUp, FadeInDown } from 'react-native-reanimated';
-import { Dropdown } from '@/components/atoms/DropDown';
-import { useFormattedTokens, useFormattedChains } from '@/services/sdks/squid';
-import { Stack } from '@/components/molecules/Stack';
+import { useRoute } from './hooks/use-route';
+
+interface IChain {
+  chainId: string;
+  tokenAddress: string;
+  tokens: Array<Item>;
+}
 
 export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-
-  const [chainId, setChainId] = React.useState('1');
+  const { getEstimation, executeSwap } = useRoute();
+  const [from, setFrom] = React.useState<IChain>({
+    chainId: '1',
+    tokenAddress: '',
+    tokens: [],
+  });
+  const [to, setTo] = React.useState<IChain>({
+    chainId: '1',
+    tokenAddress: '',
+    tokens: [],
+  });
 
   const formattedChains = useFormattedChains();
-  const formattedToken = useFormattedTokens(chainId);
+  const { filterTokens, formattedTokens } = useFormattedTokens();
 
-  const handleChainChange = (value: string) => {
-    setChainId(value);
+  const handleSwapBtnPress = () => {
+    log('handleSwapBtnPress pressed');
+    getEstimation({
+      fromChain: 'Ethereum',
+      fromToken: from.tokenAddress,
+      fromAmount: '100',
+      toChain: 'Avalanche-c',
+      toToken: to.tokenAddress,
+      toAddress: '0x000',
+      slippage: 1,
+      enableForecall: false,
+      quoteOnly: true,
+    });
+  };
+
+  const handleFromChainChange = (chainFromId: string) => {
+    filterTokens(chainFromId);
+    setFrom({
+      ...from,
+      chainId: chainFromId,
+      tokens: formattedTokens,
+    });
+  };
+
+  const handleToChainChange = (chainToId: string) => {
+    filterTokens(chainToId);
+    setTo({
+      ...to,
+      chainId: chainToId,
+      tokens: formattedTokens,
+    });
   };
 
   return (
     <View
       style={{
-        backgroundColor: theme.colors.card,
+        backgroundColor: theme.colors.background,
         flex: 1,
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
@@ -41,53 +91,89 @@ export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
         style={styles.artworkStyle}>
         <SwapArt width={150} height={150} />
       </Animated.View>
-      <Stack
-        style={styles.innerContainer}
-        space={Spacing.base}
-        padding={Spacing.lg}>
-        <Text style={styles.animatedDescription}>{t('swap.from')}</Text>
-        <View style={styles.row}>
-          <Dropdown
-            list={formattedChains}
-            onChange={handleChainChange}
-            style={styles.dropDownList}
+      <View style={styles.card}>
+        <Box alignItems="center" style={{ margin: 10 }}>
+          <Input mx="3" placeholder={t('globals.amount')} w="100%" />
+        </Box>
+        <HStack space={1} justifyContent="center" marginBottom={Spacing.base}>
+          <CustomSelect
+            label={t('swap.labels.sourceChain')}
+            selectedValue={from.chainId}
+            minWidth="180"
+            accessibilityLabel={t('swap.placeholders.selectChainFrom')}
+            placeholder={t('swap.placeholders.selectChainFrom')}
+            items={formattedChains}
+            onValueChange={d => handleFromChainChange(d)}
           />
-          <Dropdown
-            list={formattedToken}
-            onChange={() => {}}
-            style={styles.dropDownList}
+          <CustomSelect
+            label={t('swap.labels.sourceToken')}
+            selectedValue={from.tokenAddress}
+            minWidth="180"
+            accessibilityLabel={t('swap.placeholders.selectTokenFrom')}
+            placeholder={t('swap.placeholders.selectTokenFrom')}
+            items={from.tokens}
+            onValueChange={tokenFromAddress =>
+              setFrom({
+                ...from,
+                tokenAddress: tokenFromAddress,
+                tokens: formattedTokens,
+              })
+            }
           />
-        </View>
-        <Text style={styles.animatedDescription}>{t('swap.to')}</Text>
-        <View style={styles.row}>
-          <Dropdown
-            list={formattedChains}
-            onChange={handleChainChange}
-            style={styles.dropDownList}
+        </HStack>
+
+        <HStack space={1} justifyContent="center">
+          <CustomSelect
+            label={t('swap.labels.destinationChain')}
+            selectedValue={to.chainId}
+            minWidth="180"
+            accessibilityLabel={t('swap.placeholders.selectChainTo')}
+            placeholder={t('swap.placeholders.selectChainTo')}
+            items={formattedChains}
+            disabled={from.tokenAddress === ''}
+            onValueChange={c => handleToChainChange(c)}
           />
-          <Dropdown
-            list={formattedToken}
-            onChange={() => {}}
-            style={styles.dropDownList}
+          <CustomSelect
+            label={t('swap.labels.destinationToken')}
+            selectedValue={to.tokenAddress}
+            minWidth="180"
+            accessibilityLabel={t('swap.placeholders.selectTokenTo')}
+            placeholder={t('swap.placeholders.selectTokenTo')}
+            items={to.tokens}
+            disabled={from.tokenAddress === ''}
+            onValueChange={tokenToAddress =>
+              setTo({ ...to, tokenAddress: tokenToAddress })
+            }
           />
-        </View>
+        </HStack>
+      </View>
+      <FloatingGroup>
         <Animated.View
-          entering={FadeInDown.delay(600).duration(1000).springify()}>
+          entering={FadeInDown.delay(400).duration(1000).springify()}>
           <PrimaryBtn
-            label="Swap"
-            onPress={() => navigation.navigate('Home')}
+            label={t('swap.btn.swap')}
+            style={styles.primaryBtn}
+            onPress={handleSwapBtnPress}
           />
         </Animated.View>
-      </Stack>
+      </FloatingGroup>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  card: {
+    backgroundColor: Colors.white,
+    paddingVertical: Spacing.xl,
+    marginHorizontal: Spacing.base,
+    paddingHorizontal: Spacing.base,
+    borderRadius: 12,
+  },
   dropDownList: {
     fontSize: 24,
     fontWeight: '500',
   },
+  primaryBtn: { width: '90%', alignSelf: 'center' },
   animatedDescription: {
     opacity: 0.5,
     marginTop: 16,
@@ -96,7 +182,11 @@ const styles = StyleSheet.create({
   innerContainer: { alignItems: 'center', gap: 16, marginTop: 32 },
   animatedTitle: { fontSize: 40, fontWeight: '800' },
   animatedView: { alignItems: 'flex-end' },
-  artworkStyle: { alignItems: 'center', flex: 1, justifyContent: 'center' },
+  artworkStyle: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 32,
+  },
   padding: { padding: 24 },
   inputContainer: { position: 'relative', width: '90%' },
   toStyle: {

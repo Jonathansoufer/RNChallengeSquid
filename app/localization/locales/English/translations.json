@@ -1,5 +1,6 @@
 {
   "globals": {
+    "amount": "Amount",
     "btn": {
       "next": "Next",
       "back": "Back"
@@ -9,6 +10,12 @@
     "btn": {
       "view-account": "View Account",
       "connect-wallet": "Connect"
+    },
+    "toasts": {
+      "info": {
+        "title": "Wallet Not Connected",
+        "message": "Connect Your Wallet to Continue"
+      }
     }
   },
   "swap": {
@@ -16,6 +23,18 @@
     "to": "To",
     "btn": {
       "swap": "Swap"
+    },
+    "labels": {
+      "sourceChain": "Source Chain",
+      "destinationChain": "Destination Chain",
+      "sourceToken": "Source Token",
+      "destinationToken": "Destination Token"
+    },
+    "placeholders": {
+      "selectChainTo": "Chain to swap to",
+      "selectChainFrom": "Chain to swap from",
+      "selectTokenTo": "Token to swap to",
+      "selectTokenFrom": "Token to swap from"
     }
   }
 }

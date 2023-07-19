@@ -408,7 +408,7 @@ PODS:
     - React-Core
   - react-native-randombytes (3.6.1):
     - React-Core
-  - react-native-safe-area-context (4.7.1):
+  - react-native-safe-area-context (3.3.2):
     - React-Core
   - react-native-webview (13.2.2):
     - React-Core
@@ -573,8 +573,8 @@ PODS:
   - RNSentry (5.7.1):
     - React-Core
     - Sentry/HybridSDK (= 8.8.0)
-  - RNSVG (13.10.0):
-    - React-Core
+  - RNSVG (12.1.1):
+    - React
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
   - SDWebImage/Core (5.11.1)
@@ -865,7 +865,7 @@ SPEC CHECKSUMS:
   react-native-mmkv: dea675cf9697ad35940f1687e98e133e1358ef9f
   react-native-performance: 224bd53e6a835fda4353302cf891d088a0af7406
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
-  react-native-safe-area-context: 9697629f7b2cda43cf52169bb7e0767d330648c2
+  react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d
   React-NativeModulesApple: c57f3efe0df288a6532b726ad2d0322a9bf38472
   React-perflogger: 6bd153e776e6beed54c56b0847e1220a3ff92ba5
@@ -894,7 +894,7 @@ SPEC CHECKSUMS:
   RNReanimated: 9f7068e43b9358a46a688d94a5a3adb258139457
   RNScreens: 50ffe2fa2342eabb2d0afbe19f7c1af286bc7fb3
   RNSentry: 4e4fc87b53002c015f644cb7207d4b598bc3703f
-  RNSVG: 80584470ff1ffc7994923ea135a3e5ad825546b9
+  RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   Sentry: 927dfb29d18a14d924229a59cc2ad149f43349f2

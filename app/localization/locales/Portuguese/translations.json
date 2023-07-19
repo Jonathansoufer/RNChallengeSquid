@@ -1,21 +1,40 @@
 {
   "globals": {
+    "amount": "Amount",
     "btn": {
-      "next": "Próximo",
-      "back": "Voltar"
+      "next": "Next",
+      "back": "Back"
     }
   },
   "send": {
     "btn": {
-      "view-account": "Ver conta",
-      "connect-wallet": "Conectar"
+      "view-account": "View Account",
+      "connect-wallet": "Connect"
+    },
+    "toasts": {
+      "info": {
+        "title": "Wallet Not Connected",
+        "message": "Connect Your Wallet to Continue"
+      }
     }
   },
   "swap": {
-    "from": "De",
-    "to": "Para",
+    "from": "From",
+    "to": "To",
     "btn": {
-      "swap": "Trocar"
+      "swap": "Swap"
+    },
+    "labels": {
+      "sourceChain": "Source Chain",
+      "destinationChain": "Destination Chain",
+      "sourceToken": "Source Token",
+      "destinationToken": "Destination Token"
+    },
+    "placeholders": {
+      "selectChainTo": "Chain to swap to",
+      "selectChainFrom": "Chain to swap from",
+      "selectTokenTo": "Token to swap to",
+      "selectTokenFrom": "Token to swap from"
     }
   }
 }

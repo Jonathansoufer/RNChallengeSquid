@@ -1,10 +1,10 @@
+import { CoinData } from '@/screens/Home/mocked.data';
+import { Colors, Spacing } from '@/utils/constants';
+import { formatAmount } from '@/utils/methods';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { PrimaryBtn } from './PrimaryBtn';
-import { Colors } from '@/utils/constants';
-import { CoinData } from '@/screens/Home/mocked.data';
-import { formatAmount } from '@/utils/methods';
 
 interface Props {
   token: CoinData;
@@ -44,20 +44,22 @@ const styles = StyleSheet.create({
   primaryText: {
     fontSize: 16,
     fontWeight: '500',
-    padding: 4,
+    padding: Spacing.md,
   },
   secondaryText: {
     fontSize: 14,
     fontWeight: '300',
     opacity: 0.5,
-    padding: 4,
+    padding: Spacing.sm,
     marginLeft: 30,
   },
   container: {
-    padding: 16,
-    marginVertical: 4,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    marginVertical: Spacing.sm,
+    marginHorizontal: Spacing.md,
     backgroundColor: Colors.white,
-    borderRadius: 8,
+    borderRadius: Spacing.base,
   },
   row: { flexDirection: 'row', alignItems: 'center' },
   image: { width: 32, height: 32, overflow: 'hidden', borderRadius: 32 / 2 },

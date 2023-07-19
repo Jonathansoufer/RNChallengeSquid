@@ -17,5 +17,5 @@ export const initializeSquid = async () => {
 
   const { chains = [], tokens = [] } = squid;
 
-  return { chains, tokens };
+  return { chains, tokens, squid };
 };

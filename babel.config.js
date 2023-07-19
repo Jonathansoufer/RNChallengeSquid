@@ -16,6 +16,9 @@ module.exports = function (api) {
       'module:metro-react-native-babel-preset',
     ],
     plugins: [
+      '@babel/plugin-transform-flow-strip-types',
+      ['@babel/plugin-transform-private-property-in-object', { loose: true }],
+      ['@babel/plugin-proposal-class-properties', { loose: true }],
       '@babel/plugin-proposal-numeric-separator',
       'babel-plugin-styled-components',
       [

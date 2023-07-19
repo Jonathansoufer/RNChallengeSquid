@@ -1,30 +1,29 @@
 // eslint-disable react-native/no-inline-styles
-import { View, StyleSheet } from 'react-native';
-import Toast from 'react-native-toast-message';
-import React from 'react';
-import { useTheme } from '@react-navigation/native';
-import { useTranslation } from 'react-i18next';
-import { PrimaryBtn, Wallet } from '../../components';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
-import { FlashList } from '@shopify/flash-list';
+import { FloatingGroup, PrimaryBtn, Wallet } from '@/components';
+import { TokenRow } from '@/components/atoms/TokenRow';
+import { BottomSheetComponent } from '@/components/molecules/BottomSheet';
+import { useWalletConnectHooks } from '@/globalState/wallet-connect';
 import { RootStackScreenProps } from '@/navigation/RootNavigation';
-import {
-  WalletConnectModal,
-  useWalletConnectModal,
-} from '@walletconnect/modal-react-native';
+import { CoinData } from '@/screens/Home/mocked.data';
 import {
   projectId,
   providerMetadata,
 } from '@/services/sdks/wallet-connect/config';
+import { useTheme } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
+import {
+  WalletConnectModal,
+  useWalletConnectModal,
+} from '@walletconnect/modal-react-native';
+import { Stack } from 'native-base';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { StyleSheet, View } from 'react-native';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Spacing } from '@/utils';
-import { useWalletConnectHooks } from '@/globalState/wallet-connect';
-import { TokenRow } from '@/components/atoms/TokenRow';
-import { CoinData } from '@/screens/Home/mocked.data';
-import { BottomSheetComponent } from '@/components/molecules/BottomSheet';
-import { Stack } from '@/components/molecules/Stack';
+import Toast from 'react-native-toast-message';
+
 import mockedTokens from './mocked.data';
-import { FloatingGroup } from '@/components/molecules/FloatingGroup';
 
 export function Home({ navigation }: RootStackScreenProps<'Home'>) {
   const theme = useTheme();
@@ -47,8 +46,8 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>) {
   const onRowDisabledPress = () => {
     Toast.show({
       type: 'info',
-      text1: t('send.toasts.title'),
-      text2: t('send.toasts.info.description'),
+      text1: t('send.toasts.info.title'),
+      text2: t('send.toasts.info.message'),
     });
   };
 
@@ -78,11 +77,10 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>) {
       <BottomSheetComponent
         snapPoints={['50%', '90%']}
         scrollViewChildren={
-          <Stack space={Spacing.base} padding={Spacing.lg}>
+          <Stack direction="row" mb="2.5" mt="1.5" space={3}>
             <FlashList
               data={mockedTokens}
               renderItem={renderItem}
-              // estimatedListSize={(200, 30)}
               estimatedItemSize={100}
               keyExtractor={item => String(item.id)}
             />
