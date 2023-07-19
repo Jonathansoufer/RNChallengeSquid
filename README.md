@@ -68,3 +68,5 @@ Note: Make sure you are using node version ˆ18.0.0 and follow the instructions 
 ![Onboarding Screen](./app/assets/screenshots/onboarding-screen.png)
 ![Home Screen](./app/assets/screenshots/home-screen.png)
 ![Wallet Connect](./app/assets/screenshots/wallet-connect-screen.png)
+![Network Choise](./app/assets/screenshots/netwok-choice.png)
+![Swap Screen](./app/assets/screenshots/swap.png)
