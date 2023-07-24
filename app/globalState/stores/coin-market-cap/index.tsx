@@ -1,9 +1,9 @@
-import { StateCreator, create } from 'zustand';
-import { persist, PersistOptions, StateStorage } from 'zustand/middleware';
 import { createSelectorHooks } from 'auto-zustand-selectors-hook';
+import { StateCreator, create } from 'zustand';
+import { PersistOptions, persist } from 'zustand/middleware';
+import { zustandMMKVStorage } from '../../app-persist-storage';
 import { getAllCoins } from './utils/get-all-coins';
 import { MarketCapCoin } from './utils/types';
-import { zustandMMKVStorage } from '../app-persist-storage';
 
 export interface CoinGeckoState {
   coins: MarketCapCoin[];

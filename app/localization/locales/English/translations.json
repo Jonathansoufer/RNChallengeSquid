@@ -1,14 +1,22 @@
 {
   "globals": {
     "amount": "Amount",
+    "balance": "Balance",
+    "price": "Price",
+    "priceImpact": "Price Impact",
+    "amountInUSD": "Amount in USD",
+    "fee": "Fee",
+    "feeCosts": "Fee Costs",
+    "gasCosts": "Gas Costs",
+    "total": "Total",
     "btn": {
       "next": "Next",
       "back": "Back"
     }
   },
-  "send": {
+  "home": {
     "btn": {
-      "view-account": "View Account",
+      "swap-now": "Swap Now",
       "connect-wallet": "Connect"
     },
     "toasts": {
@@ -29,7 +37,9 @@
       "sourceChain": "Source Chain",
       "destinationChain": "Destination Chain",
       "sourceToken": "Source Token",
-      "destinationToken": "Destination Token"
+      "destinationToken": "Destination Token",
+      "estimation": "Estimation",
+      "routeDuration": "Estimated Route Duration"
     },
     "placeholders": {
       "selectChainTo": "Chain to swap to",

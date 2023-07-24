@@ -2,19 +2,11 @@
 import { FloatingGroup, PrimaryBtn, Wallet } from '@/components';
 import { TokenRow } from '@/components/atoms/TokenRow';
 import { BottomSheetComponent } from '@/components/molecules/BottomSheet';
-import { useWalletConnectHooks } from '@/globalState/wallet-connect';
 import { RootStackScreenProps } from '@/navigation/RootNavigation';
 import { CoinData } from '@/screens/Home/mocked.data';
-import {
-  projectId,
-  providerMetadata,
-} from '@/services/sdks/wallet-connect/config';
+
 import { useTheme } from '@react-navigation/native';
 import { FlashList } from '@shopify/flash-list';
-import {
-  WalletConnectModal,
-  useWalletConnectModal,
-} from '@walletconnect/modal-react-native';
 import { Stack } from 'native-base';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,21 +15,14 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
+import { useMetamaskSDK } from '@/services/sdk/metamask';
 import mockedTokens from './mocked.data';
 
 export function Home({ navigation }: RootStackScreenProps<'Home'>) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-
-  const { open, provider, address, isConnected } = useWalletConnectModal();
-  const { saveWalletConnectionSession } = useWalletConnectHooks();
-
-  React.useEffect(() => {
-    if (provider && address && isConnected) {
-      saveWalletConnectionSession(provider, address, isConnected);
-    }
-  }, [provider, address, isConnected, saveWalletConnectionSession]);
+  const { getConnectedToMetamask, connectedAccount } = useMetamaskSDK();
 
   const renderItem = ({ item }: { item: CoinData }) => {
     return <TokenRow token={item} onPress={onRowDisabledPress} />;
@@ -46,17 +31,13 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>) {
   const onRowDisabledPress = () => {
     Toast.show({
       type: 'info',
-      text1: t('send.toasts.info.title'),
-      text2: t('send.toasts.info.message'),
+      text1: t('home.toasts.info.title'),
+      text2: t('home.toasts.info.message'),
     });
   };
 
-  const handleWalletBtnPress = () => {
-    if (!isConnected) {
-      navigation.navigate('Swap');
-    } else {
-      open();
-    }
+  const handleConnectWalletBtnPress = () => {
+    !connectedAccount ? navigation.navigate('Swap') : getConnectedToMetamask();
   };
 
   return (
@@ -92,21 +73,15 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>) {
           entering={FadeInDown.delay(400).duration(1000).springify()}>
           <PrimaryBtn
             label={
-              isConnected
-                ? t('send.btn.view-account')
-                : t('send.btn.connect-wallet')
+              !connectedAccount
+                ? t('home.btn.swap-now')
+                : t('home.btn.connect-wallet')
             }
             style={styles.primaryBtn}
-            onPress={handleWalletBtnPress}
+            onPress={handleConnectWalletBtnPress}
           />
         </Animated.View>
       </FloatingGroup>
-      <View style={styles.innerContainer}>
-        <WalletConnectModal
-          projectId={projectId}
-          providerMetadata={providerMetadata}
-        />
-      </View>
     </View>
   );
 }

@@ -7,6 +7,7 @@ LogBox.ignoreLogs([
   '[DEPRECATED] `getStorage`, `serialize` and `deserialize` options are deprecated. Use `storage` option instead.',
   'Possible Unhandled Promise Rejection',
   'rendered size is not usable. Either the height or width is too small',
+  'In React 18',
 ]);
 
 export function log(...args: any[]) {

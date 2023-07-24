@@ -5,79 +5,60 @@ import {
   PrimaryBtn,
   Swap as SwapArt,
 } from '@/components';
-import { useFormattedChains, useFormattedTokens } from '@/services/sdks/squid';
-import { Colors, Spacing } from '@/utils';
-import { useWalletProvider } from '@/utils/hooks/use-wallet-provider';
+import { useMetamaskSDK } from '@/services/sdk/metamask';
+import { useFormattedChains } from '@/services/sdk/squid';
+import { Colors, Spacing, log } from '@/utils';
 import { useTheme } from '@react-navigation/native';
+import { debounce } from 'lodash';
 import { Box, HStack, Input, View } from 'native-base';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
-import { Item } from 'react-native-picker-select';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RootStackScreenProps } from '../../navigation/RootNavigation';
+import { ShowEstimation } from './components/ShowEstimation';
 import { useRoute } from './hooks/use-route';
-
-interface IChain {
-  chainId: string;
-  tokenAddress: string;
-  tokens: Array<Item>;
-  walletAddress?: string;
-}
-
+import { useSwapMethods } from './hooks/use-swap-methods';
 export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
-  const { connect } = useWalletProvider();
-  const { t } = useTranslation();
-  const { getEstimation, executeSwap } = useRoute();
-  const [from, setFrom] = React.useState<IChain>({
-    chainId: '1',
-    tokenAddress: '',
-    tokens: [],
-  });
-  const [to, setTo] = React.useState<IChain>({
-    chainId: '1',
-    tokenAddress: '',
-    tokens: [],
-    walletAddress: '',
-  });
+  const { executeSwap } = useRoute();
+  const { signer, getConnectedToMetamask } = useMetamaskSDK();
+  const {
+    getSwapEstimation,
+    handleFromChainChange,
+    handleToChainChange,
+    currentEstimation,
+    swapParams,
+    setSwapParams,
+    setIsReadyToSwap,
+    tokens,
+  } = useSwapMethods();
 
+  const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
   const formattedChains = useFormattedChains();
-  const { filterTokens, formattedTokens } = useFormattedTokens();
 
   const handleSwapBtnPress = async () => {
-    await getEstimation({
-      fromChain: Number(from.chainId),
-      fromToken: from.tokenAddress,
-      fromAmount: '100',
-      toChain: Number(to.chainId),
-      toToken: to.tokenAddress,
-      toAddress: to.walletAddress!,
-      slippage: 1,
-      enableForecall: false,
-      quoteOnly: true,
-    });
+    await getConnectedToMetamask();
+
+    await executeSwap(swapParams, signer);
   };
 
-  const handleFromChainChange = (chainFromId: string) => {
-    filterTokens(chainFromId);
-    setFrom({
-      ...from,
-      chainId: chainFromId,
-      tokens: formattedTokens,
-    });
-  };
-
-  const handleToChainChange = (chainToId: string) => {
-    filterTokens(chainToId);
-    setTo({
-      ...to,
-      chainId: chainToId,
-      tokens: formattedTokens,
-    });
-  };
+  useEffect(() => {
+    if (
+      swapParams.fromChain !== 0 &&
+      swapParams.toChain !== 0 &&
+      swapParams.fromToken !== '' &&
+      swapParams.toToken !== '' &&
+      swapParams.fromAmount !== '' &&
+      swapParams.toAddress
+    ) {
+      setIsReadyToSwap(true);
+      getSwapEstimation();
+      log('ready to swap', swapParams);
+    }
+  }, [swapParams]);
 
   return (
     <View
@@ -96,30 +77,40 @@ export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
       </Animated.View>
       <View style={styles.card}>
         <Box alignItems="center" style={{ margin: 10 }}>
-          <Input mx="3" placeholder={t('globals.amount')} w="100%" />
+          {/* TODO: add debounced input for amount and format it */}
+          <Input
+            mx="3"
+            placeholder={t('globals.amountInUSD')}
+            w="97%"
+            onChangeText={debounce((text: string) => {
+              setSwapParams({
+                ...swapParams,
+                fromAmount: text,
+              });
+            }, 1000)}
+          />
         </Box>
         <HStack space={1} justifyContent="center" marginBottom={Spacing.base}>
           <CustomSelect
             label={t('swap.labels.sourceChain')}
-            selectedValue={from.chainId}
+            selectedValue={swapParams.fromChain}
             minWidth="180"
             accessibilityLabel={t('swap.placeholders.selectChainFrom')}
             placeholder={t('swap.placeholders.selectChainFrom')}
             items={formattedChains}
-            onValueChange={d => handleFromChainChange(d)}
+            onValueChange={cId => handleFromChainChange(cId)}
           />
           <CustomSelect
             label={t('swap.labels.sourceToken')}
-            selectedValue={from.tokenAddress}
+            selectedValue={swapParams.fromToken}
             minWidth="180"
             accessibilityLabel={t('swap.placeholders.selectTokenFrom')}
             placeholder={t('swap.placeholders.selectTokenFrom')}
-            items={from.tokens}
-            onValueChange={tokenFromAddress =>
-              setFrom({
-                ...from,
-                tokenAddress: tokenFromAddress,
-                tokens: formattedTokens,
+            items={tokens.fromTokens}
+            onValueChange={fromTokenAddress =>
+              setSwapParams({
+                ...swapParams,
+                fromToken: fromTokenAddress,
               })
             }
           />
@@ -128,31 +119,45 @@ export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
         <HStack space={1} justifyContent="center">
           <CustomSelect
             label={t('swap.labels.destinationChain')}
-            selectedValue={to.chainId}
+            selectedValue={swapParams.toChain}
             minWidth="180"
             accessibilityLabel={t('swap.placeholders.selectChainTo')}
             placeholder={t('swap.placeholders.selectChainTo')}
             items={formattedChains}
-            disabled={from.tokenAddress === ''}
             onValueChange={c => handleToChainChange(c)}
           />
           <CustomSelect
             label={t('swap.labels.destinationToken')}
-            selectedValue={to.tokenAddress}
+            selectedValue={swapParams.toToken}
             minWidth="180"
             accessibilityLabel={t('swap.placeholders.selectTokenTo')}
             placeholder={t('swap.placeholders.selectTokenTo')}
-            items={to.tokens}
-            disabled={from.tokenAddress === ''}
-            onValueChange={tokenToAddress =>
-              setTo({ ...to, tokenAddress: tokenToAddress })
+            items={tokens.toTokens}
+            onValueChange={toTokenAddress =>
+              setSwapParams({
+                ...swapParams,
+                toToken: toTokenAddress,
+              })
             }
           />
         </HStack>
         <Box alignItems="center" style={{ margin: 10 }}>
-          <Input mx="3" placeholder={t('swap.destinationWallet')} w="100%" />
+          {/* TODO: add debounced input for wallet */}
+          <Input
+            mx="3"
+            placeholder={t('swap.destinationWallet')}
+            w="97%"
+            onChangeText={debounce((text: string) => {
+              setSwapParams({
+                ...swapParams,
+                toAddress: text,
+              });
+            }, 1000)}
+          />
+          <ShowEstimation estimation={currentEstimation} />
         </Box>
       </View>
+
       <FloatingGroup>
         <Animated.View
           entering={FadeInDown.delay(400).duration(1000).springify()}>

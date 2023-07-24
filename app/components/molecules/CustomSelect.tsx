@@ -33,7 +33,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         placeholder={placeholder}
         _selectedItem={{
           bg: 'teal.600',
-          endIcon: <CheckIcon size="5" />,
+          endIcon: <CheckIcon size="3" />,
         }}
         mt={1}
         onValueChange={onValueChange}>

@@ -1,9 +1,8 @@
-import { initializeSquid } from '@/services/sdks/squid';
+import { initializeSquid } from '@/services/sdk/squid';
 import { log } from '@/utils';
+import { Signer, Wallet } from 'ethers';
 
-import { SignClient } from '@walletconnect/sign-client';
-
-interface TradeParams {
+export interface SwapParams {
   fromChain: number;
   fromToken: string;
   fromAmount: string;
@@ -21,36 +20,44 @@ interface ExecutionSettings {
 }
 
 export function useRoute() {
-  const getEstimation = async (params: TradeParams) => {
-    const { squid } = await initializeSquid();
-    log('getEstimation params', params);
+  const getEstimation = async (params: SwapParams) => {
+    try {
+      log('getEstimation Processing...', params);
+      const { squid } = await initializeSquid();
+      const { route } = await squid.getRoute(params);
 
-    const { route, requestId, integratorId } = await squid.getRoute(params);
-
-    log('getEstimation', route, requestId, integratorId);
-
-    return { estimation: route.estimate };
+      return { estimation: route.estimate };
+    } catch (error) {
+      log('getEstimation error', error);
+      return { error };
+    }
   };
 
   const executeSwap = async (
-    params: TradeParams,
+    params: SwapParams,
+    signer: Signer | Wallet | undefined,
     executionSettings?: ExecutionSettings,
   ) => {
-    const { squid } = await initializeSquid();
-    const { route } = await squid.getRoute(params);
-    const signClient = await SignClient.init({
-      projectId: 'a5397947dc05faa107548a550fe77cc9',
-    });
+    try {
+      const { squid } = await initializeSquid();
+      const { route } = await squid.getRoute(params);
 
-    let signer: any = signClient;
+      if (!signer) {
+        return { error: 'Signer is not set' };
+      }
 
-    const txHash = await squid.executeRoute({
-      signer,
-      route,
-      executionSettings,
-    });
+      log('executeSwap Processing...', signer);
 
-    return txHash;
+      const txHash = await squid.executeRoute({
+        signer,
+        route,
+        executionSettings,
+      });
+      return txHash;
+    } catch (error) {
+      log('executeSwap error', error);
+      return { error };
+    }
   };
 
   return {

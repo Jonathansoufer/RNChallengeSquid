@@ -1,40 +1,41 @@
 {
   "globals": {
-    "amount": "Amount",
+    "amount": "Quantidade",
     "btn": {
-      "next": "Next",
-      "back": "Back"
+      "next": "Próximo",
+      "back": "voltar"
     }
   },
-  "send": {
+  "home": {
     "btn": {
-      "view-account": "View Account",
-      "connect-wallet": "Connect"
+      "swap-now": "Troque agora",
+      "connect-wallet": "Conectar"
     },
     "toasts": {
       "info": {
-        "title": "Wallet Not Connected",
-        "message": "Connect Your Wallet to Continue"
+        "title": "Carteira não conectada",
+        "message": "Conecte sua carteira para continuar"
       }
     }
   },
   "swap": {
-    "from": "From",
-    "to": "To",
+    "from": "De",
+    "to": "Para",
+    "destinationWallet": "Carteira de destino",
     "btn": {
-      "swap": "Swap"
+      "swap": "trocar"
     },
     "labels": {
-      "sourceChain": "Source Chain",
-      "destinationChain": "Destination Chain",
-      "sourceToken": "Source Token",
-      "destinationToken": "Destination Token"
+      "sourceChain": "Cadeia de origem",
+      "destinationChain": "Cadeia de destino",
+      "sourceToken": "Token de origem",
+      "destinationToken": "Token de destino"
     },
     "placeholders": {
-      "selectChainTo": "Chain to swap to",
-      "selectChainFrom": "Chain to swap from",
-      "selectTokenTo": "Token to swap to",
-      "selectTokenFrom": "Token to swap from"
+      "selectChainTo": "Cadeia para trocar",
+      "selectChainFrom": "Cadeia para trocar",
+      "selectTokenTo": "Token para trocar",
+      "selectTokenFrom": "Token para troca"
     }
   }
 }

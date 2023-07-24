@@ -1,25 +1,22 @@
-import { initializeSquid } from '@/services/sdks/squid';
-import { ChainData, TokenData } from '@0xsquid/sdk/dist/types';
+import { initializeSquid } from '@/services/sdk/squid';
+import { ChainData } from '@0xsquid/sdk/dist/types';
 import {
   createSelectorFunctions,
   createSelectorHooks,
 } from 'auto-zustand-selectors-hook';
 import { StateCreator, create } from 'zustand';
 import { PersistOptions, persist } from 'zustand/middleware';
-import { zustandMMKVStorage } from '../app-persist-storage';
+import { zustandMMKVStorage } from '../../app-persist-storage';
 
 export interface SquidState {
-  tokens: TokenData[] | [];
   chains: ChainData[] | [];
 }
 
 export interface SquidStore extends SquidState {
-  setTokens: () => void;
   setChains: () => void;
 }
 
 const initialSquidState: SquidState = {
-  tokens: [],
   chains: [],
 };
 
@@ -30,16 +27,11 @@ type SquidPersist = (
 
 const STORE_NAME = 'kado-squid';
 
-export const useSquid = create(
+export const useSquidStore = create(
   (persist as SquidPersist)(
     (set, get) => ({
       ...initialSquidState,
-      setTokens: async () => {
-        const { tokens } = await initializeSquid();
-        set({
-          tokens,
-        });
-      },
+
       setChains: async () => {
         const { chains } = await initializeSquid();
         set({
@@ -57,11 +49,11 @@ export const useSquid = create(
 );
 
 export const clearWalletConnectStorage = () => {
-  useSquid.setState({
+  useSquidStore.setState({
     ...initialSquidState,
   });
 };
 
 // @ts-ignore
-export const useSquidHooks = createSelectorHooks(useSquid);
-export const useSquidFunctions = createSelectorFunctions(useSquid);
+export const useSquidHooks = createSelectorHooks(useSquidStore);
+export const useSquidFunctions = createSelectorFunctions(useSquidStore);

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   ChainsData,
   GetRoute,
@@ -6,9 +5,10 @@ import {
   RouteResponse,
   StatusResponse,
   TokensData,
-} from '@/services/sdks/squid';
+} from '@/services/sdk/squid';
+import axios from 'axios';
 
-export const useSquid = () => {
+export function useSquid() {
   const getChains = async (): Promise<ChainsData> => {
     const result: ChainsData = await axios.get(
       `${process.env.SQUID_TEST_URL}/chains`,
@@ -59,4 +59,4 @@ export const useSquid = () => {
     getRoute,
     getStatus,
   };
-};
+}
