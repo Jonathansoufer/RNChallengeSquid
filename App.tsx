@@ -6,7 +6,7 @@ import {
   Theme,
 } from '@react-navigation/native';
 import { NativeBaseProvider } from 'native-base';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
@@ -17,6 +17,8 @@ import { usePerformanceAnalytics } from '@/analytics/use-performance-analytics';
 import { toastConfig } from '@/components/atoms/CustomToast';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+import SplashScreen from 'react-native-splash-screen';
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -41,6 +43,18 @@ export default function App() {
           },
     [colorScheme],
   );
+
+  useEffect(() => {
+    const ac = new AbortController();
+
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 1000);
+
+    return function cleanup() {
+      ac.abort();
+    };
+  }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
