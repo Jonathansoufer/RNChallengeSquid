@@ -11,7 +11,7 @@ import { Colors, Spacing, log } from '@/utils';
 import { useTheme } from '@react-navigation/native';
 import { debounce } from 'lodash';
 import { Box, HStack, Input, View } from 'native-base';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -45,7 +45,8 @@ export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
 
     await getConnectedToMetamask();
 
-    const { txReceipt, txStatus } = await executeSwap(swapParams, signer);
+    const txReceipt = await executeSwap(swapParams, signer);
+    log('txReceipt', txReceipt);
 
     setIsLoading(false);
   };
@@ -221,7 +222,3 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
-
-function useState(arg0: boolean): [any, any] {
-  throw new Error('Function not implemented.');
-}
