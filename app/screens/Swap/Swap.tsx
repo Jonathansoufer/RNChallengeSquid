@@ -24,6 +24,7 @@ export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
   const theme = useTheme();
   const { executeSwap } = useRoute();
   const { signer, getConnectedToMetamask } = useMetamaskSDK();
+  const [isLoading, setIsLoading] = useState(false);
   const {
     getSwapEstimation,
     handleFromChainChange,
@@ -40,9 +41,13 @@ export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
   const formattedChains = useFormattedChains();
 
   const handleSwapBtnPress = async () => {
+    setIsLoading(true);
+
     await getConnectedToMetamask();
 
-    await executeSwap(swapParams, signer);
+    const { txReceipt, txStatus } = await executeSwap(swapParams, signer);
+
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -165,6 +170,7 @@ export const Swap = ({ navigation }: RootStackScreenProps<'Swap'>) => {
             label={t('swap.btn.swap')}
             style={styles.primaryBtn}
             onPress={handleSwapBtnPress}
+            disable={isLoading}
           />
         </Animated.View>
       </FloatingGroup>
@@ -215,3 +221,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
+
+function useState(arg0: boolean): [any, any] {
+  throw new Error('Function not implemented.');
+}

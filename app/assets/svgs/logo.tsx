@@ -1,15 +1,8 @@
-import * as React from "react";
-import Svg, { SvgProps, G, Path, Defs, ClipPath } from "react-native-svg";
+import * as React from 'react';
+import Svg, { ClipPath, Defs, G, Path, SvgProps } from 'react-native-svg';
 
 const KadoLogo = (props: SvgProps) => (
-  <Svg
-    width={24}
-    height={24}
-    viewBox="0 0 120 33"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+  <Svg width={24} height={24} viewBox="0 0 120 33" fill="none" {...props}>
     <G clipPath="url(#prefix__a)">
       <Path
         opacity={0.75}

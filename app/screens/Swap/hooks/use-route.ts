@@ -35,12 +35,12 @@ export function useRoute() {
 
   const executeSwap = async (
     params: SwapParams,
-    signer: Signer | Wallet | undefined,
+    signer: Signer | Wallet | null,
     executionSettings?: ExecutionSettings,
   ) => {
     try {
       const { squid } = await initializeSquid();
-      const { route } = await squid.getRoute(params);
+      const { route, requestId, integratorId } = await squid.getRoute(params);
 
       if (!signer) {
         return { error: 'Signer is not set' };
@@ -53,10 +53,18 @@ export function useRoute() {
         route,
         executionSettings,
       });
-      return txHash;
-    } catch (error) {
-      log('executeSwap error', error);
-      return { error };
+
+      const txReceipt = await txHash.wait();
+
+      const txStatus = await squid.getStatus({
+        requestId,
+        integratorId,
+        transactionId: txReceipt.transactionHash,
+      });
+
+      return { txReceipt, txStatus };
+    } catch (e) {
+      log('executeSwap error', e);
     }
   };
 
