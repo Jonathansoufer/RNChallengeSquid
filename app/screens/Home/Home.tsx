@@ -37,7 +37,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>) {
   };
 
   const handleConnectWalletBtnPress = () => {
-    !connectedAccount ? navigation.navigate('Swap') : getConnectedToMetamask();
+    connectedAccount ? navigation.navigate('Swap') : getConnectedToMetamask();
   };
 
   return (
@@ -73,7 +73,7 @@ export function Home({ navigation }: RootStackScreenProps<'Home'>) {
           entering={FadeInDown.delay(400).duration(1000).springify()}>
           <PrimaryBtn
             label={
-              !connectedAccount
+              connectedAccount
                 ? t('home.btn.swap-now')
                 : t('home.btn.connect-wallet')
             }
